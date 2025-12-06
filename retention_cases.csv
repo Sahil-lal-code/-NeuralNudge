@@ -1,0 +1,3 @@
+customer_id,timestamp,churn_probability,risk_level,monthly_charges,estimated_savings,actions_taken,status
+REAL_CUST_001,2025-11-05T22:17:08.347345,0,UNKNOWN,89.99,2159.7599999999998,[],OPEN
+101,2025-11-05T23:14:54.362121,0.41626396775245667,MEDIUM,99.0,1188.0,[],OPEN

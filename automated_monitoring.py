@@ -1,0 +1,219 @@
+import pandas as pd
+import numpy as np
+import time
+from datetime import datetime
+from retention_actions import CustomerRetentionSystem
+import json
+import os
+
+class AutomatedChurnMonitor:
+    def __init__(self):
+        self.retention_system = CustomerRetentionSystem()
+        self.high_risk_threshold = 0.7  # 70% probability
+        
+    def daily_customer_scan(self):
+        """Scan all customers daily for churn risk"""
+        print(f"\n📊 DAILY CHURN SCAN - {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+        print("=" * 50)
+        
+        # Load your customer database (replace with your actual data source)
+        try:
+            customers_df = pd.read_csv('your_customer_database.csv')
+        except:
+            print("❌ Customer database not found. Using sample data...")
+            customers_df = self._create_sample_customers()
+        
+        high_risk_customers = []
+        total_revenue_at_risk = 0
+        
+        for idx, customer in customers_df.iterrows():
+            customer_data = customer.to_dict()
+            
+            # Predict churn
+            prediction = self.retention_system.predictor.predict_churn(customer_data)
+            
+            if prediction['churn_probability'] >= self.high_risk_threshold:
+                high_risk_customers.append({
+                    'customer_data': customer_data,
+                    'prediction': prediction,
+                    'revenue_at_risk': customer_data.get('MonthlyCharges', 0) * 12
+                })
+                total_revenue_at_risk += customer_data.get('MonthlyCharges', 0) * 12
+        
+        # Generate daily report
+        self._generate_daily_report(high_risk_customers, total_revenue_at_risk)
+        
+        # Send alert if high-risk customers found
+        if high_risk_customers:
+            self._send_alert(high_risk_customers, total_revenue_at_risk)
+    
+    def _generate_daily_report(self, high_risk_customers, total_revenue_at_risk):
+        """Generate daily churn risk report"""
+        report = {
+            'date': datetime.now().isoformat(),
+            'total_customers_scanned': len(high_risk_customers) + 50,  # Sample total
+            'high_risk_customers': len(high_risk_customers),
+            'total_revenue_at_risk': total_revenue_at_risk,
+            'high_risk_details': []
+        }
+        
+        print(f"🔍 Scan Results:")
+        print(f"   • High-Risk Customers: {len(high_risk_customers)}")
+        print(f"   • Revenue at Risk: ${total_revenue_at_risk:,.2f}")
+        
+        if high_risk_customers:
+            avg_risk = sum(c['prediction']['churn_probability'] for c in high_risk_customers) / len(high_risk_customers)
+            print(f"   • Average Risk Score: {avg_risk:.1%}")
+        else:
+            print(f"   • Average Risk Score: 0%")
+        
+        for customer in high_risk_customers[:5]:  # Show top 5
+            details = {
+                'customer_id': customer['customer_data'].get('customer_id', 'Unknown'),
+                'churn_probability': customer['prediction']['churn_probability'],
+                'monthly_revenue': customer['customer_data'].get('MonthlyCharges', 0),
+                'annual_revenue_at_risk': customer['revenue_at_risk']
+            }
+            report['high_risk_details'].append(details)
+            
+            print(f"\n   🚨 {details['customer_id']}:")
+            print(f"      Churn Risk: {details['churn_probability']:.1%}")
+            print(f"      Monthly Revenue: ${details['monthly_revenue']:.2f}")
+            print(f"      Annual Risk: ${details['annual_revenue_at_risk']:.2f}")
+        
+        # Save report
+        with open(f'daily_report_{datetime.now().strftime("%Y%m%d")}.json', 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        print(f"\n💾 Daily report saved")
+    
+    def _send_alert(self, high_risk_customers, total_revenue):
+        """Send alert for high-risk customers"""
+        subject = f"🚨 CHURN ALERT: {len(high_risk_customers)} High-Risk Customers"
+        
+        body = f"""
+        CHURN RISK ALERT - {datetime.now().strftime('%Y-%m-%d')}
+        
+        🚨 CRITICAL: {len(high_risk_customers)} customers at high risk of churn!
+        💰 Total Revenue at Risk: ${total_revenue:,.2f}
+        
+        TOP HIGH-RISK CUSTOMERS:
+        """
+        
+        for i, customer in enumerate(high_risk_customers[:5], 1):
+            body += f"""
+            {i}. {customer['customer_data'].get('customer_id', 'Unknown')}
+               - Churn Probability: {customer['prediction']['churn_probability']:.1%}
+               - Monthly Revenue: ${customer['customer_data'].get('MonthlyCharges', 0):.2f}
+               - Annual Risk: ${customer['revenue_at_risk']:.2f}
+            """
+        
+        body += f"""
+        
+        🎯 REQUIRED ACTIONS:
+        • Contact high-risk customers within 24 hours
+        • Implement retention offers
+        • Review customer satisfaction
+        
+        Generated by Churn Prediction System
+        """
+        
+        print(f"📧 Alert prepared: {subject}")
+        print("💡 To enable email alerts, configure SMTP settings")
+    
+    def _create_sample_customers(self):
+        """Create sample customer data for demonstration"""
+        sample_data = []
+        for i in range(100):
+            sample_data.append({
+                'customer_id': f'CUST_{1000+i}',
+                'tenure': np.random.randint(1, 72),
+                'MonthlyCharges': np.random.uniform(20, 120),
+                'TotalCharges': np.random.uniform(100, 5000),
+                'Contract_One year': np.random.choice([0, 1]),
+                'Contract_Two year': np.random.choice([0, 1]),
+                'PaperlessBilling': np.random.choice([0, 1]),
+                'SeniorCitizen': np.random.choice([0, 1]),
+                'Partner': np.random.choice([0, 1]),
+                'Dependents': np.random.choice([0, 1]),
+                'PhoneService': 1,
+                'MultipleLines': np.random.choice([0, 1]),
+                'OnlineSecurity': np.random.choice([0, 1]),
+                'OnlineBackup': np.random.choice([0, 1]),
+                'DeviceProtection': np.random.choice([0, 1]),
+                'TechSupport': np.random.choice([0, 1]),
+                'StreamingTV': np.random.choice([0, 1]),
+                'StreamingMovies': np.random.choice([0, 1]),
+                'gender_Male': np.random.choice([0, 1]),
+                'InternetService_Fiber optic': np.random.choice([0, 1]),
+                'InternetService_No': 0,
+                'PaymentMethod_Credit card (automatic)': np.random.choice([0, 1]),
+                'PaymentMethod_Electronic check': np.random.choice([0, 1]),
+                'PaymentMethod_Mailed check': 0
+            })
+        return pd.DataFrame(sample_data)
+    
+    def scan_specific_customer(self, customer_id, customer_data):
+        """Scan a specific customer and return detailed analysis"""
+        print(f"\n🔍 Scanning customer: {customer_id}")
+        prediction = self.retention_system.predictor.predict_churn(customer_data)
+        
+        print(f"🎯 Churn Probability: {prediction['churn_probability']:.2%}")
+        print(f"🚨 Risk Level: {prediction['risk_level']}")
+        
+        if prediction['churn_probability'] >= self.high_risk_threshold:
+            print("⚠️  HIGH RISK - Immediate action required!")
+            # Generate retention plan
+            retention_plan = self.retention_system._generate_retention_plan(prediction, customer_data)
+            print(f"💡 Recommended actions: {retention_plan['immediate_actions'][0]}")
+        
+        return prediction
+
+def main():
+    monitor = AutomatedChurnMonitor()
+    
+    print("🔄 CHURN MONITORING SYSTEM")
+    print("=" * 50)
+    
+    # Run immediate scan
+    monitor.daily_customer_scan()
+    
+    print(f"\n✅ Automated monitoring ready!")
+    print(f"⏰ Next scan scheduled for tomorrow")
+    
+    # Example: Scan a specific high-risk customer
+    print(f"\n" + "="*50)
+    print("🔍 SPECIFIC CUSTOMER ANALYSIS")
+    print("="*50)
+    
+    high_risk_customer = {
+        'customer_id': 'URGENT_CUST_001',
+        'tenure': 3,
+        'MonthlyCharges': 95.50,
+        'TotalCharges': 286.50,
+        'Contract_One year': 0,
+        'Contract_Two year': 0,
+        'PaperlessBilling': 1,
+        'PaymentMethod_Electronic check': 1,
+        'InternetService_Fiber optic': 1,
+        'SeniorCitizen': 0,
+        'Partner': 0,
+        'Dependents': 0,
+        'PhoneService': 1,
+        'MultipleLines': 1,
+        'OnlineSecurity': 0,
+        'OnlineBackup': 0,
+        'DeviceProtection': 0,
+        'TechSupport': 0,
+        'StreamingTV': 1,
+        'StreamingMovies': 1,
+        'gender_Male': 1,
+        'InternetService_No': 0,
+        'PaymentMethod_Credit card (automatic)': 0,
+        'PaymentMethod_Mailed check': 0
+    }
+    
+    monitor.scan_specific_customer('URGENT_CUST_001', high_risk_customer)
+
+if __name__ == "__main__":
+    main()

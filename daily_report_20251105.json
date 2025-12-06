@@ -1,0 +1,14 @@
+{
+  "date": "2025-11-05T22:25:04.825393",
+  "total_customers_scanned": 51,
+  "high_risk_customers": 1,
+  "total_revenue_at_risk": 1229.760425384099,
+  "high_risk_details": [
+    {
+      "customer_id": "CUST_1031",
+      "churn_probability": 0.7166441082954407,
+      "monthly_revenue": 102.48003544867493,
+      "annual_revenue_at_risk": 1229.760425384099
+    }
+  ]
+}

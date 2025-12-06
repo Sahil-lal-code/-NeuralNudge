@@ -1,0 +1,27 @@
+{
+  "report_date": "2025-11-05",
+  "executive_summary": {
+    "system_status": "OPERATIONAL",
+    "revenue_protected": 2159.76,
+    "revenue_at_risk": 1229.76,
+    "high_risk_customers": 1,
+    "business_impact": "HIGH"
+  },
+  "performance_metrics": {
+    "churn_recall_rate": 0.79,
+    "accuracy": 0.73,
+    "roi_estimate": 2159.76,
+    "customers_analyzed": 100
+  },
+  "risk_assessment": {
+    "current_risk_level": "MEDIUM",
+    "immediate_actions_required": true,
+    "revenue_exposure": 1229.76
+  },
+  "strategic_recommendations": [
+    "Immediate outreach to high-risk customers",
+    "Expand system to full customer base",
+    "Implement automated retention workflows",
+    "Monthly performance review meetings"
+  ]
+}
