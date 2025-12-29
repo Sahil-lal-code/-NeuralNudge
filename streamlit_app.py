@@ -1107,13 +1107,23 @@ def create_developer_profile():
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.markdown("""
-        <div style='text-align: center;'>
-            <img src='formal_image copy.png' 
-                 style='width: 200px; height: 200px; border-radius: 50%; object-fit: cover;
-                        border: 4px solid linear-gradient(135deg, #667eea 0%, #764ba2 100%);'>
+        try:
+            # For local file
+            profile_img = "formal_image copy.png" 
+            st.image(profile_img, width=200, 
+                    caption="Sahil Lal | Engineering Student & Aspiring Data Scientist")
+        except:
+            st.markdown("""
+            <div style='text-align: center;'>
+                <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                          width: 200px; height: 200px; border-radius: 50%; margin: 0 auto 20px auto;
+                          display: flex; align-items: center; justify-content: center; color: white;
+                          font-size: 48px; font-weight: bold;'>
+                    SL
+                </div>
+
             <h3>Sahil Lal</h3>
-            <p><em>Engineering Student & Data Scientist</em></p>
+            <p><em>Engineering Student & Aspiring Data Scientist</em></p>
         </div>
         """, unsafe_allow_html=True)
     
