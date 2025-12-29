@@ -1109,14 +1109,11 @@ def create_developer_profile():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                      width: 200px; height: 200px; border-radius: 50%; margin: 0 auto 20px auto;
-                      display: flex; align-items: center; justify-content: center; color: white;
-                      font-size: 48px; font-weight: bold;'>
-                SL
-            </div>
+            <img src='formal_image copy.png' 
+                 style='width: 200px; height: 200px; border-radius: 50%; object-fit: cover;
+                        border: 4px solid linear-gradient(135deg, #667eea 0%, #764ba2 100%);'>
             <h3>Sahil Lal</h3>
-            <p><em>Data Scientist & ML Engineer</em></p>
+            <p><em>Engineering Student & Data Scientist</em></p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1126,7 +1123,7 @@ def create_developer_profile():
         
         **Expertise:** Predictive Analytics • Machine Learning • Business Intelligence • Full-stack AI Solutions
         
-        **Technical Stack:** Python • Scikit-learn • XGBoost • TensorFlow • Streamlit • SQL • AWS • Docker
+        **Technical Stack:** Python • Scikit-learn • XGBoost • TensorFlow • Streamlit • SQL 
         
         **Project Impact:**
         - 79%+ accuracy in churn prediction models
@@ -1138,7 +1135,7 @@ def create_developer_profile():
         - Built scalable AI solutions serving 10,000+ customers
         - Reduced customer churn by 35% through predictive interventions
         
-        **Connect:** [LinkedIn] • [GitHub] • [Portfolio] • [Email]
+        **Connect:** [LinkedIn](https://www.linkedin.com/in/sahil-lal-4152a92a0/)• [GitHub](https://github.com/Sahil-lal-code) • [Portfolio](www.sahillal.netlify.app) • [sahillal615@gmail.com]
         
         *"Transforming complex data into actionable business intelligence and measurable outcomes"*
         """)
