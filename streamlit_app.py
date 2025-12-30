@@ -1145,7 +1145,7 @@ def create_developer_profile():
         - Built scalable AI solutions serving 10,000+ customers
         - Reduced customer churn by 35% through predictive interventions
         
-        **Connect:** [LinkedIn](https://www.linkedin.com/in/sahil-lal-4152a92a0/)• [GitHub](https://github.com/Sahil-lal-code) • [Portfolio](www.sahillal.netlify.app) • [sahillal615@gmail.com]
+        **Connect:** [LinkedIn](https://www.linkedin.com/in/sahil-lal-4152a92a0/)• [GitHub](https://github.com/Sahil-lal-code) • [Portfolio](https://sahillal.netlify.app/) • [sahillal615@gmail.com]
         
         *"Transforming complex data into actionable business intelligence and measurable outcomes"*
         """)
